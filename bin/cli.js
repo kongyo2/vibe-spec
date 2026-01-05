@@ -220,7 +220,7 @@ program
 program
   .command("spec [project]")
   .description(
-    "Generate project specification from Claude Code logs using OpenAI (uses current directory if not specified)"
+    "Generate project specification from Claude Code logs using OpenAI-compatible API (uses current directory if not specified)"
   )
   .option("-o, --output <file>", "Output specification to a file")
   .option(
@@ -228,16 +228,29 @@ program
     "Messages per chunk (default: 50)",
     parseInt
   )
-  .option("--model <model>", "OpenAI model to use (default: gpt-5-mini)")
+  .option("--model <model>", "Model to use (default: gpt-4o-mini or OPENAI_MODEL env)")
+  .option("--api-base <url>", "API base URL (or set OPENAI_BASE_URL env)")
   .option("--update", "Update existing specification file instead of replacing")
   .option("--include-tools", "Include tool usage in analysis")
   .action(async (project, options) => {
     const spinner = ora("Loading project logs...").start();
 
     try {
-      const specGenerator = new SpecGenerator();
+      // Build SpecGenerator options
+      const generatorOptions = {};
+      if (options.apiBase) {
+        generatorOptions.baseURL = options.apiBase;
+      }
+
+      const specGenerator = new SpecGenerator(generatorOptions);
       const logParser = new LogParser();
       const projectIdentifier = logParser.getProjectIdentifier(project);
+
+      // Show API endpoint info
+      if (specGenerator.baseURL) {
+        spinner.info(`Using API endpoint: ${specGenerator.baseURL}`);
+        spinner.start("Loading project logs...");
+      }
 
       // Parse project logs (suppress the log parser's spinner since we have our own)
       const messages = await logParser.parseProjectLogs(projectIdentifier, {
@@ -272,7 +285,7 @@ program
       // Generate specification
       const spec = await specGenerator.generateSpec(userMessages, {
         chunkSize: options.chunkSize || 50,
-        model: options.model || "gpt-5-mini",
+        model: options.model || process.env.OPENAI_MODEL || "gpt-4o-mini",
         existingSpec: existingSpec,
         onProgress: (msg) => {
           spinner.text = msg;
@@ -296,12 +309,15 @@ program
       );
 
       if (error.message.includes("API key")) {
-        console.log(chalk.yellow("\nTo set up your OpenAI API key:"));
+        console.log(chalk.yellow("\nTo set up your API key:"));
         console.log(chalk.gray("1. Create a .env file in the project root"));
         console.log(chalk.gray("2. Add: OPENAI_API_KEY=your-api-key-here"));
         console.log(
           chalk.gray("3. Or set the OPENAI_API_KEY environment variable")
         );
+        console.log(chalk.yellow("\nFor OpenAI-compatible APIs:"));
+        console.log(chalk.gray("  Add: OPENAI_BASE_URL=https://your-api-endpoint/v1"));
+        console.log(chalk.gray("  Or use: --api-base https://your-api-endpoint/v1"));
       }
     }
   });

@@ -1,7 +1,7 @@
 {
-  "name": "vibe-spec",
+  "name": "@kongyo2/vibe-spec",
   "version": "1.0.0",
-  "description": "Parse, analyze, and generate specifications from Claude Code (AI Coding Assistant) session logs",
+  "description": "Generate specifications from Claude Code session logs using OpenAI-compatible LLM APIs. Forked from marmelab/vibe-spec.",
   "main": "index.js",
   "bin": {
     "vibe-spec": "./bin/cli.js"
@@ -20,21 +20,32 @@
     "parser",
     "specification",
     "openai",
+    "openai-compatible",
+    "llm",
     "developer-tools"
   ],
-  "author": "François Zaninotto",
+  "author": "kongyo2",
+  "contributors": [
+    {
+      "name": "François Zaninotto",
+      "url": "https://github.com/fzaninotto"
+    }
+  ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/marmelab/vibe-spec.git"
+    "url": "git+https://github.com/kongyo2/vibe-spec.git"
   },
   "bugs": {
-    "url": "https://github.com/marmelab/vibe-spec/issues"
+    "url": "https://github.com/kongyo2/vibe-spec/issues"
   },
-  "homepage": "https://github.com/marmelab/vibe-spec#readme",
+  "homepage": "https://github.com/kongyo2/vibe-spec#readme",
   "type": "module",
   "engines": {
     "node": ">=14.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "dependencies": {
     "chalk": "^5.6.2",

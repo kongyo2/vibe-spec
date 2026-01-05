@@ -1,10 +1,19 @@
-# Vibe Spec
+# @kongyo2/vibe-spec
 
-A command-line tool for generating specifications based on Claude Code session logs.
+> Forked from [marmelab/vibe-spec](https://github.com/marmelab/vibe-spec) with OpenAI-compatible API support.
+
+A command-line tool for generating specifications based on Claude Code session logs using **any OpenAI-compatible LLM API**.
+
+## What's Different in This Fork
+
+- **OpenAI-Compatible API Support**: Works with OpenAI, OpenRouter, Together AI, Groq, Ollama, Azure OpenAI, and any other OpenAI-compatible API
+- **Configurable API Endpoint**: Use `OPENAI_BASE_URL` environment variable or `--api-base` CLI option
+- **Chat Completions API**: Uses the standard `/v1/chat/completions` endpoint for maximum compatibility
+- **Scoped npm Package**: Published as `@kongyo2/vibe-spec` on npm
 
 ## Problem Statement
 
-Coding with an AI assistant is an iterative process: you describe what you want, report issues, request changes, and so on. As a result, the description of what the application should do is split onto multiple messages exchanged between you and the assistant. 
+Coding with an AI assistant is an iterative process: you describe what you want, report issues, request changes, and so on. As a result, the description of what the application should do is split onto multiple messages exchanged between you and the assistant.
 
 For example, the following conversation log snippet shows how a user incrementally refines the requirements for a 3D sculpting application:
 
@@ -38,48 +47,80 @@ This tool addresses that problem by parsing the conversation logs and reconstruc
 For example:
 
 > ### Sculpt Tools
-> 
+>
 > Sculpt tools provide clay-like deformation capabilities with three primary operations: Add,  Subtract, and Push.
-> 
+>
 > Users can select these tools from the toolbar to modify the selected object interactively. With a sculpt tool active and an object selected, moving over the mesh reveals a circular brush preview indicating the affected area. Pressing and holding the pointer down on the mesh begins operation, raycasting to determine hit position and triangle. Add/Subtract displace vertices along an averaged local normal; Push displaces in world-space drag direction. Brush parameters include Brush Size Strength. Users can adjust these via keyboard shortcuts (+/- for size, Shift+ +/- for strength) or UI controls.
-> 
-> Business/validation rules: 
+>
+> Business/validation rules:
 > - Sculpting must be continuous and localized;
 > - Sculpting operations automatically subdivide the mesh for detail;
 > - Affected vertices are limited to brush radius and adjacency rings;
 > - Per-frame displacement is clamped to prevent inverted normals or self-intersection;
 > - Symmetry options allow mirroring across X, Y, Z axes.
 > - Sculpt tools don't cause tearing or mesh artifacts.
-> 
+>
 > Mobile UI adjustments: An optional modal dialog provides compact controls for brushSize, brushStrength and symmetry toggles. This dialog is optional and defaults to collapsed on tool selection to keep the canvas clear.
 
 ## Installation
 
 ```bash
 # Install globally
-npm install -g vibe-spec
+npm install -g @kongyo2/vibe-spec
 
 # Or with yarn
-yarn global add vibe-spec
+yarn global add @kongyo2/vibe-spec
+
+# Or with pnpm
+pnpm add -g @kongyo2/vibe-spec
 ```
 
-To use the specification generation feature, you need an OpenAI API key:
+## API Configuration
 
-1. Get an API key from [OpenAI Platform](https://platform.openai.com/api-keys)
+To use the specification generation feature, you need an API key from your LLM provider.
 
-2. Set up your API key using one of these methods:
+### OpenAI (Default)
 
-   **Option A: Environment Variable (Recommended)**
-   ```bash
-   export OPENAI_API_KEY=your-api-key-here
-   ```
+```bash
+export OPENAI_API_KEY=your-api-key-here
+```
 
-   **Option B: .env file in your project directory**
+### OpenAI-Compatible Providers
 
-   Create a `.env` file in your current working directory (where you run `vibe-spec`):
-   ```bash
-   echo "OPENAI_API_KEY=your-api-key-here" > .env
-   ```
+Set both the API key and base URL:
+
+```bash
+# OpenRouter
+export OPENAI_API_KEY=your-openrouter-key
+export OPENAI_BASE_URL=https://openrouter.ai/api/v1
+
+# Together AI
+export OPENAI_API_KEY=your-together-key
+export OPENAI_BASE_URL=https://api.together.xyz/v1
+
+# Groq
+export OPENAI_API_KEY=your-groq-key
+export OPENAI_BASE_URL=https://api.groq.com/openai/v1
+
+# Ollama (local)
+export OPENAI_API_KEY=ollama  # Any non-empty string works
+export OPENAI_BASE_URL=http://localhost:11434/v1
+export OPENAI_MODEL=llama3.2  # Specify your local model
+
+# Azure OpenAI
+export OPENAI_API_KEY=your-azure-key
+export OPENAI_BASE_URL=https://YOUR_RESOURCE.openai.azure.com/openai/deployments/YOUR_DEPLOYMENT
+```
+
+### Using .env File
+
+Create a `.env` file in your current working directory:
+
+```bash
+OPENAI_API_KEY=your-api-key-here
+OPENAI_BASE_URL=https://your-api-endpoint/v1
+OPENAI_MODEL=gpt-4o-mini
+```
 
 ## Usage
 
@@ -148,8 +189,11 @@ vibe-spec spec -o spec.md
 # Update an existing specification (append new findings)
 vibe-spec spec -o spec.md --update
 
-# Use a specific OpenAI model (default: gpt-5-mini)
-vibe-spec spec --model gpt-5
+# Use a specific model (default: gpt-4o-mini)
+vibe-spec spec --model gpt-4o
+
+# Use a custom API endpoint
+vibe-spec spec --api-base https://api.together.xyz/v1 --model meta-llama/Llama-3-70b-chat-hf
 
 # Adjust chunk size for processing (default: 50 messages)
 vibe-spec spec --chunk-size 100
@@ -172,13 +216,12 @@ The tool:
 - Node.js >= 14.0.0
 - npm or yarn
 - Access to `~/.claude/projects/` directory
-- OpenAI API key (for specification generation)
+- API key for your chosen LLM provider
 
-## Next Steps
+## Credits
 
-- Allow iterative spec refinement (using only logs produced after the spec file last update date)
-- Support other coding AI platforms (e.g., GitHub Copilot, Gemini CLI, etc.)
-- Add an MCP server to trigger spec update via commands (e.g. `update specs`)
+- Original project: [marmelab/vibe-spec](https://github.com/marmelab/vibe-spec) by François Zaninotto
+- This fork: [kongyo2/vibe-spec](https://github.com/kongyo2/vibe-spec)
 
 ## License
 
