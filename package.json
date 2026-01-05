@@ -1,0 +1,46 @@
+{
+  "name": "vibe-spec",
+  "version": "1.0.0",
+  "description": "Parse, analyze, and generate specifications from Claude Code (AI Coding Assistant) session logs",
+  "main": "index.js",
+  "bin": {
+    "vibe-spec": "./bin/cli.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "command-line",
+    "tool",
+    "claude",
+    "ai",
+    "coding-assistant",
+    "logs",
+    "parser",
+    "specification",
+    "openai",
+    "developer-tools"
+  ],
+  "author": "François Zaninotto",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marmelab/vibe-spec.git"
+  },
+  "bugs": {
+    "url": "https://github.com/marmelab/vibe-spec/issues"
+  },
+  "homepage": "https://github.com/marmelab/vibe-spec#readme",
+  "type": "module",
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "commander": "^14.0.1",
+    "dotenv": "^17.2.3",
+    "openai": "^6.6.0",
+    "ora": "^9.0.0"
+  }
+}

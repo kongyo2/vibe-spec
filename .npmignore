@@ -1,0 +1,39 @@
+# Development and configuration files
+.env
+.env.example
+.gitignore
+.git/
+.claude/
+*.log
+
+# Test files
+test/
+tests/
+*.test.js
+*.spec.js
+
+# Documentation source files (README.md is included by default)
+docs/
+PUBLISHING.md
+
+# Build and temp files
+dist/
+build/
+*.swp
+.DS_Store
+node_modules/
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Other
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
