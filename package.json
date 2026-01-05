@@ -1,6 +1,6 @@
 {
   "name": "@kongyo2/vibe-spec",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Generate specifications from Claude Code session logs using OpenAI-compatible LLM APIs. Forked from marmelab/vibe-spec.",
   "main": "index.js",
   "bin": {
